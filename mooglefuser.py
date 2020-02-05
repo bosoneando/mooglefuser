@@ -15,7 +15,13 @@ def loadlanguage(event):
     event.target.classList.add('active')
 
 def moogles(event):
-    filestatus.textContent = '\t\t\t⏳'
+    filestatus.style.display = 'inline'
+    if 'ion-md-checkmark-circle' in filestatus.classList:
+        filestatus.classList.remove('ion-md-checkmark-circle')
+        filestatus.classList.add('ion-md-hourglass')
+    elif 'ion-md-close-circle' in filestatus.classList:
+        filestatus.classList.remove('ion-md-close-circle')
+        filestatus.classList.add('ion-md-hourglass')
     languages = ['de', 'es', 'fr', 'ko', 'zh']
     try:
         reqw = ajax.ajax()
@@ -32,18 +38,39 @@ def moogles(event):
         reqw.send()
     except:
         alert("Error: Can't connect to ffbebuilder!")
-        filestatus.textContent = '\t\t\t❌'
+        if 'ion-md-checkmark-circle' in filestatus.classList:
+            filestatus.classList.remove('ion-md-checkmark-circle')
+            filestatus.classList.add('ion-md-close-circle')
+        elif 'ion-md-hourglass' in filestatus.classList:
+            filestatus.classList.remove('ion-md-hourglass')
+            filestatus.classList.add('ion-md-close-circle')
     reader = window.FileReader.new()
     try:
         reader.readAsText(choosefile.files[0])
         reader.bind('load', process_inventory)
-        filestatus.textContent = '\t\t\t✔️'
+        if 'ion-md-close-circle' in filestatus.classList:
+            filestatus.classList.remove('ion-md-close-circle')
+            filestatus.classList.add('ion-md-checkmark-circle')
+        elif 'ion-md-hourglass' in filestatus.classList:
+            filestatus.classList.remove('ion-md-hourglass')
+            filestatus.classList.add('ion-md-checkmark-circle')
+
     except IndexError:
         alert('Error: No file was selected!')
-        filestatus.textContent = '\t\t\t❌'
+        if 'ion-md-checkmark-circle' in filestatus.classList:
+            filestatus.classList.remove('ion-md-checkmark-circle')
+            filestatus.classList.add('ion-md-close-circle')
+        elif 'ion-md-hourglass' in filestatus.classList:
+            filestatus.classList.remove('ion-md-hourglass')
+            filestatus.classList.add('ion-md-close-circle')
     except:
         alert('Error: Invalid file!')
-        filestatus.textContent = '\t\t\t❌'
+        if 'ion-md-checkmark-circle' in filestatus.classList:
+            filestatus.classList.remove('ion-md-checkmark-circle')
+            filestatus.classList.add('ion-md-close-circle')
+        elif 'ion-md-hourglass' in filestatus.classList:
+            filestatus.classList.remove('ion-md-hourglass')
+            filestatus.classList.add('ion-md-close-circle')
     
 
 def process_inventory(event):
@@ -63,7 +90,7 @@ def process_inventory(event):
                         fusedict[tmrId]['count'] += 1
                     else:
                         fusedict.update({tmrId:{'tmr':tmrName, 'unit':unitName, 'count':1, 'unitid':tmrUnit}})
-            elif tmrId in containerlist:
+            if tmrId in containerlist:
                     if tmrId in fusedict.keys():
                         fusedict[tmrId]['count'] += 1
                     else:
@@ -78,7 +105,12 @@ def process_inventory(event):
         document['results'] <= table
     except:
         alert('Error: Invalid file!')
-        filestatus.textContent = '\t\t\t❌'     
+        if 'ion-md-checkmark-circle' in filestatus.classList:
+            filestatus.classList.remove('ion-md-checkmark-circle')
+            filestatus.classList.add('ion-md-close-circle')
+        elif 'ion-md-hourglass' in filestatus.classList:
+            filestatus.classList.remove('ion-md-hourglass')
+            filestatus.classList.add('ion-md-close-circle')   
 
 def reqwComplete(request):
     global weapondict
@@ -91,6 +123,7 @@ def requComplete(request):
           
 
 code = 'en'
+document['privatebrowsing'].style.display = 'none'
 toolbar = html.DIV(id='toolbar', Class='container-fluid mx-3 mb-1')
 document <= toolbar
 langbar = html.DIV(id="langbar", Class="btn-group btn-group-toggle px-3", data_toggle="buttons", role="group", aria_label="Select language")
@@ -99,8 +132,8 @@ langtext = document.createTextNode('Select language:     ')
 langlabel <= langtext
 langbar <= langlabel
 toolbar <= langbar
-filestatus = document.createTextNode('\t\t\t ')
-res = document.createTextNode('')
+filestatus = html.I(Class='icon ion-md-checkmark-circle ml-3')
+filestatus.style.display = 'none'
 docbar = html.DIV(id='docbar', Class='btn-group px-3')
 doclabel = html.BUTTON(Class='btn-secondary rounded-left', disabled=True)
 doctext = document.createTextNode('Select file:     ')
@@ -115,21 +148,53 @@ buttonrun <= buttontext
 toolbar <= buttonrun
 toolbar <= filestatus
 
-results = html.SPAN(id='results', Class='zone')
+results = html.DIV(id='results', Class='container-fluid')
 document <= results
+
+footer = html.DIV(id='footer', Class='container-fluid')
+homebutton = html.A(href='https://bosoneando.github.io', Class='btn btn-primary')
+homelabel = document.createTextNode('Home')
+homeicon = html.I(Class='icon ion-md-home pr-3')
+homebutton <= homeicon
+homebutton <= homelabel
+footer <= homebutton
+helpbutton = html.A(href='https://bosoneando.github.io/mooglefuser/help.html', Class='btn btn-primary')
+helplabel = document.createTextNode('Help')
+helpicon = html.I(Class='icon ion-md-help-circle pr-3')
+helpbutton <= helpicon
+helpbutton <= helplabel
+footer <= helpbutton
+aboutbutton = html.A(href='https://bosoneando.github.io/mooglefuser/about.html', Class='btn btn-primary')
+aboutlabel = document.createTextNode('About')
+abouticon = html.I(Class='icon ion-md-information-circle pr-3')
+aboutbutton <= abouticon
+aboutbutton <= aboutlabel
+footer <= aboutbutton
+gitbutton = html.A(href='https://github.com/bosoneando/mooglefuser', Class='btn btn-primary')
+gitlabel = document.createTextNode('See code on GitHub')
+giticon = html.I(Class='icon ion-logo-github pr-3')
+gitbutton <= giticon
+gitbutton <= gitlabel
+footer <= gitbutton
+builderbutton = html.A(href='https://ffbeequip.com/', Class='btn btn-primary')
+builderlabel = document.createTextNode('Visit ffbeequip')
+buildericon = html.I(Class='icon ion-md-cog pr-3')
+builderbutton <= buildericon
+builderbutton <= builderlabel
+footer <= builderbutton
+document <= footer
 
 unitdict = {}
 weapondict = {}
 inventory = {}
-flags = {'en':'🇬🇧', 'de':'🇩🇪', 'es':'🇪🇸', 'fr':'🇫🇷', 'ko':'🇰🇷', 'zh':'🇨🇳'}
-
+flags = {'de':'germany', 'en':'great-britain', 'es':'spain', 'fr':'france', 'ko':'south-korea','zh':'china'}
 lang_buttons = []
 for l, f in flags.items():
     if l == 'en':
-        elt = html.BUTTON(Class='btn btn-outline-primary active', type='radio', name='lang', value=l, checked='true', data_toggle='button')
+        elt = html.BUTTON(Class='btn btn-outline-primary active', type='radio', name='lang', value=l, checked='true', data_toggle='button', title=l)
     else:
-        elt = html.BUTTON(Class='btn btn-outline-primary', type='radio', name='lang', value=l, data_toggle='button')
-    txt = document.createTextNode(f'{f}\t\t\t')
+        elt = html.BUTTON(Class='btn btn-outline-primary', type='radio', name='lang', value=l, data_toggle='button', title=l)
+    txt = html.IMG(src='https://img.icons8.com/color/24/000000/' + flags[l] + '.png', value=l)
     elt <= txt
     elt.bind('click', loadlanguage)
     langbar.appendChild(elt)
